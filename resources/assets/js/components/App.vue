@@ -121,16 +121,20 @@
       }
     },
     mounted: function() {
-      let uri = `http://localhost:8080/api/user`
+      let uri = `http://localhost:8181/api/user`
 
       window.axios.get(uri).then(
         response => {
           this.user.authenticated = true
           this.user.profile = response.data.data
         },
+        // Error case when token not accepted
         response => {
           this.user.authenticated = false
-          this.user.profile = null
+          this.user.profile = {
+            first_name: null,
+            email: null
+          }
         }
       )
     }

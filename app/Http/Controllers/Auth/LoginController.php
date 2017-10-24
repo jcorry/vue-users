@@ -47,7 +47,7 @@ class LoginController extends BaseController
             $data = [];
             $meta = [];
             
-            $data['user'] = Auth::user();
+            $data['user'] = \Sentinel::getUser();
             $meta['token'] = $token;
 
             return response()->json([

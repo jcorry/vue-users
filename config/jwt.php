@@ -155,7 +155,9 @@ return [
         |
         */
 
-        'auth' => 'Tymon\JWTAuth\Providers\Auth\IlluminateAuthAdapter',
+        'auth' => function ($app) {
+            return new \App\Http\Repositories\Auth\SentinelAuthAdapter($app['auth']);
+        },
 
         /*
         |--------------------------------------------------------------------------
