@@ -26,5 +26,7 @@ Route::group(
     ['middleware' => ['jwt.auth', 'role:admin']],
     function () {
         Route::get('users', 'AdminUserController@index');
+        Route::post('users', 'AdminUserController@create');
+        Route::patch('users', 'AdminUserController@update');
     }
 );
