@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller as BaseController;
+use App\Models\User;
 
 /**
  * AdminUserController handles requests related to user management
  * @author John Corry <jcorry@gmail.com>
  */
-class AdminUserController extends Controller
+class AdminUserController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +19,7 @@ class AdminUserController extends Controller
      */
     public function index()
     {
-        //
+        return User::paginate();
     }
 
     /**

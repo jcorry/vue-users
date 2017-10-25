@@ -13,8 +13,16 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li><router-link to="/">Home</router-link></li>
-            <li v-show="this.user.authenticated"><router-link to="/admin">Admin</router-link></li>
+            <li><router-link :to="{name: 'Home'}">Home</router-link></li>
+            <li v-if="this.user.authenticated" class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><router-link to="/admin">Admin</router-link></li>
+                <li><router-link to="/admin/users">Users</router-link></li>
+                <li><router-link to="/admin/users/create">New User</router-link></li>
+              </ul>
+            </li>
+            
           </ul>
           <ul class="nav navbar-nav navbar-right" v-show="!this.user.authenticated">
             <li><router-link to="/register">Register</router-link></li>
@@ -121,12 +129,19 @@
       }
     },
     mounted: function() {
-      let uri = `http://localhost:8181/api/user`
+      // This validates the user with the stored JWT so users don't have to log in again until after
+      // JWT expiration.
+      let uri = `http://localhost:8080/api/user`
 
       window.axios.get(uri).then(
         response => {
-          this.user.authenticated = true
-          this.user.profile = response.data.data
+          let keys = Object.keys(response.data.data)
+          // If the request to /api/user gets a user with the same email as was submitted
+          if (keys.includes('email')) {
+            // ... we're authenticated
+            this.user.authenticated = true
+            this.user.profile = response.data.data
+          }
         },
         // Error case when token not accepted
         response => {
@@ -136,7 +151,13 @@
             email: null
           }
         }
-      )
+      ).catch(err => {
+          this.user.authenticated = false
+          this.user.profile = {
+            first_name: null,
+            email: null
+          }
+      })
     }
   }
 </script>

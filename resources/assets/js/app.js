@@ -23,14 +23,13 @@ const vueConfig = require('vue-config')
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 const configs = {
-  API_URL: 'http://localhost:8181/api'
+  API_URL: 'http://localhost:8080/api'
 }
 
 Vue.use(vueConfig, configs)
 Vue.use(Router)
 
 const router = new Router({
-  mode: 'history',
   routes: [
     {
       name: 'Home',
@@ -52,17 +51,17 @@ const router = new Router({
     {
       name: 'Admin',
       path: '/admin',
-      component: Admin
-    },
-    {
-      name: 'AdminUsers',
-      path: '/admin/users',
-      component: AdminUsers
-    },
-    {
-      name: 'AdminUserCreate',
-      path: '/admin/users/create',
-      component: AdminUserCreate
+      component: Admin,
+      children: [
+        {
+          path: 'users',
+          component: AdminUsers
+        },
+        {
+          path: 'users/create',
+          component: AdminUserCreate
+        }
+      ]
     }
   ]
 })

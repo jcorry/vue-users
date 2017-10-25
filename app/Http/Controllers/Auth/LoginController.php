@@ -30,19 +30,25 @@ class LoginController extends BaseController
     public function loginUser(\App\Http\Requests\AuthLoginRequest $request)
     {
         try {
-            $token = JWTAuth::attempt($request->only('email', 'password'), [
-                'exp' => Carbon::now()->addWeek()->timestamp,
-            ]);
+            $token = JWTAuth::attempt(
+                $request->only('email', 'password'), [
+                    'exp' => Carbon::now()->addWeek()->timestamp,
+                ]
+            );
         } catch (JWTException $e) {
-            return response()->json([
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    'error' => $e->getMessage()
+                ], 500
+            );
         }
 
         if (!$token) {
-            return response()->json([
-                'error' => 'Could not authenticate.'
-            ], 401);
+            return response()->json(
+                [
+                    'error' => 'Could not authenticate.'
+                ], 401
+            );
         } else {
             $data = [];
             $meta = [];
@@ -50,10 +56,12 @@ class LoginController extends BaseController
             $data['user'] = \Sentinel::getUser();
             $meta['token'] = $token;
 
-            return response()->json([
-                'data' => $data,
-                'meta' => $meta,
-            ]);
+            return response()->json(
+                [
+                    'data' => $data,
+                    'meta' => $meta,
+                ]
+            );
         }
     }
 

@@ -14,7 +14,7 @@ class UserController extends Controller
     public function readResource(Request $request)
     {
         return response()->json([
-            'data' => \Auth::user()
+            'data' => \Sentinel::getUser()
         ]);
     }
 }
