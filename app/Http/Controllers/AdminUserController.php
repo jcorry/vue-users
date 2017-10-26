@@ -78,7 +78,7 @@ class AdminUserController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**
@@ -90,6 +90,6 @@ class AdminUserController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        return response()->json(User::destroy($id));
     }
 }

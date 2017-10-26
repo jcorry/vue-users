@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Users</h2>
+    <h2 class="pull-left">Users</h2><h2 class=" pull-right"><router-link class="btn btn-sm btn-default" to="/admin/users/create">New</router-link></h2>
     <table class="table is-striped">
       <tbody>
         <tr v-for="(user, index) in users" :key="user.id">
@@ -10,7 +10,7 @@
           <td>{{ user.email }}</td>
           <td>{{ user.phone}}</td>
           <td>{{ user.soberDate}}</td>
-          <td>edit delete</td>
+          <td><button class="btn btn-sm btn-primary" v-on:click="editItem(user.id)">Edit</button> <button class="btn btn-sm btn-danger" v-on:click="deleteItem(user.id)">Delete</button></td>
         </tr>
       </tbody>
       <thead>
@@ -65,10 +65,14 @@ export default {
         console.error(err)
       })
     },
+    editItem(id) {
+      console.log(`Editing user: ${id}`);
+    },
     deleteItem(id)
     {
+      console.log(`Deleting user: ${id}`);
       let uri = `${this.$config.API_URL}/users/${id}`
-      this.axios.delete(uri).then(response => {
+      window.axios.delete(uri).then(response => {
         this.items.splice(id, 1)
       })
     }
