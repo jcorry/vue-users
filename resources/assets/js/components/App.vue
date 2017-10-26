@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <nav class="navbar navbar-default">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -47,8 +47,9 @@
               </ul>
             </li>
           </ul>
-          <ul class="nav navbar-nav navbar-right" v-show="this.user.profile != null">
+          <ul class="nav navbar-nav navbar-right" v-show="this.user.authenticated">
             <li><router-link to="/dashboard">Welcome, {{ this.user.profile.email }}</router-link></li>
+            <li><a v-on:click.stop="logout">Logout</a></li>
           </ul>
       </div>
     </nav>
@@ -124,14 +125,33 @@
       logout() {
         localStorage.removeItem('id_token')
         this.user.authenticated = false
-        this.user.profile = null
+        this.success = false
+        this.error = false
 
         this.$router.push({
-          name: 'home'
+          name: 'Home'
         })
       }
     },
     mounted: function() {
+      // Router auth middleware
+      this.$router.beforeEach((to, from, next) => {
+        if (to.matched.some(record => record.meta.requiresAuth)) {
+          if (!user.authenticated) {
+            next({
+              path: '/home',
+              query: {
+                redirect: to.fullPath,
+              },
+            })
+          } else {
+            next()
+          }
+        } else {
+          next()
+        }
+      })
+
       // This validates the user with the stored JWT so users don't have to log in again until after
       // JWT expiration.
       let uri = `http://localhost:8181/api/user`
@@ -154,7 +174,7 @@
             email: null
           }
           this.$router.push({
-            name: 'home'
+            name: 'Home'
           })
         }
       ).catch(err => {
@@ -164,7 +184,7 @@
             email: null
           }
           this.$router.push({
-            name: 'home'
+            name: 'Home'
           })
       })
     }

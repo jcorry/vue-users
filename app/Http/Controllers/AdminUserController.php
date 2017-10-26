@@ -78,7 +78,6 @@ class AdminUserController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        
     }
 
     /**
@@ -90,6 +89,9 @@ class AdminUserController extends BaseController
      */
     public function destroy($id)
     {
-        return response()->json(User::destroy($id));
+        // Delete the User, activations, role_user records
+        $user = \Sentinel::findById($id);
+
+        return response()->json($user->delete());
     }
 }

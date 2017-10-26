@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Dashboard</h1>
-    <pre>{{ this.user.profile }}</pre>
+    <pre>{{ user.profile }}</pre>
   </div>
 </template>
 
