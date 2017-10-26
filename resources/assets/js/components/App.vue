@@ -131,7 +131,7 @@
     mounted: function() {
       // This validates the user with the stored JWT so users don't have to log in again until after
       // JWT expiration.
-      let uri = `http://localhost:8080/api/user`
+      let uri = `http://localhost:8181/api/user`
 
       window.axios.get(uri).then(
         response => {

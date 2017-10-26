@@ -23,7 +23,7 @@ const vueConfig = require('vue-config')
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 const configs = {
-  API_URL: 'http://localhost:8080/api'
+  API_URL: 'http://localhost:8181/api'
 }
 
 Vue.use(vueConfig, configs)
