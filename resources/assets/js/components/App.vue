@@ -83,7 +83,10 @@
             first_name: "",
             email: ""
           },
-          authenticated: false
+          authenticated: false,
+          permissions: {
+            
+          }
         },
         email: null,
         password: null
@@ -150,6 +153,9 @@
             first_name: null,
             email: null
           }
+          this.$router.push({
+            name: 'home'
+          })
         }
       ).catch(err => {
           this.user.authenticated = false
@@ -157,6 +163,9 @@
             first_name: null,
             email: null
           }
+          this.$router.push({
+            name: 'home'
+          })
       })
     }
   }
