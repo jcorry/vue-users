@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,14 +12,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'email' => 'foo@bar.com',
-            'password' => bcrypt('password'),
-            'first_name' => 'foo',
-            'last_name' => 'bar',
-            'phone' => '4045551212',
-        ]);
-        
+        $users = factory(App\Models\User::class, 10)->create()->each(
+            function ($u) {
+                $user = \Sentinel::findById($u->id);
+                \Activation::create($user);
+            }
+        );
+
         // $this->call(UsersTableSeeder::class);
         DB::table('roles')->insert([
             'slug' => 'user',
