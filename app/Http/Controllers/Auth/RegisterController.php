@@ -26,13 +26,9 @@ class RegisterController extends BaseController
     public function createUser(\App\Http\Requests\AuthRegisterRequest $request)
     {
         // Add user to User table
-        $user = User::create([
-            'email' => $request->json('email'),
-            'password' => bcrypt($request->json('password')),
-        ]);
+        $user = User::create($request->all());
         // Add user to the users role
         // Notify user of registration, send verification code
-        //
         return response()->json($user);
     }
 

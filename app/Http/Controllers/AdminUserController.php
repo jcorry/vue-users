@@ -27,9 +27,13 @@ class AdminUserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(\App\Http\Requests\CreateUserRequest $request)
     {
-        //
+        
+        
+        $user = User::create($request->all());
+
+        return response()->json($user);
     }
 
     /**

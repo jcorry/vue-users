@@ -13,8 +13,8 @@ class User extends \Cartalyst\Sentinel\Users\EloquentUser
      *
      * @var array
      */
-    protected $fillable = [
-        'firstName', 'lastName', 'email', 'password',
+    protected $fillable = [        
+        'first_name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -25,4 +25,9 @@ class User extends \Cartalyst\Sentinel\Users\EloquentUser
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
 }
