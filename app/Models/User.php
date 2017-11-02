@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Authenticatable;
 
 class User extends \Cartalyst\Sentinel\Users\EloquentUser
 {
@@ -14,7 +15,7 @@ class User extends \Cartalyst\Sentinel\Users\EloquentUser
      * @var array
      */
     protected $fillable = [        
-        'first_name', 'last_name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'phone', 'password',
     ];
 
     /**
@@ -29,5 +30,10 @@ class User extends \Cartalyst\Sentinel\Users\EloquentUser
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function getAuthIdentifier()
+    {
+        return $this->id;
     }
 }

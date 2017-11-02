@@ -19,6 +19,7 @@ class SentinelAuthAdapter implements AuthInterface
             $user = Sentinel::authenticate($credentials);
             return $user instanceof UserInterface;
         } catch (Exception $e) {
+            \Log::error($e->getMessage());
             return false;
         }
     }
@@ -36,6 +37,7 @@ class SentinelAuthAdapter implements AuthInterface
             Sentinel::login($user);
             return $user instanceof UserInterface && Sentinel::check();
         } catch (Exception $e) {
+            \Log::error($e->getMessage());
             return false;
         }
     }

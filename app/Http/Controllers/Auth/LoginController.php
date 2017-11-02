@@ -46,7 +46,7 @@ class LoginController extends BaseController
         if (!$token) {
             return response()->json(
                 [
-                    'error' => 'Could not authenticate.'
+                    'error' => 'Could not authenticate. No Token.'
                 ], 401
             );
         } else {
