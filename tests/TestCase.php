@@ -21,6 +21,5 @@ abstract class TestCase extends BaseTestCase
     public function runDatabaseMigrations()
     {
         $this->baseRunDatabaseMigrations();
-        $this->artisan('db:seed');
     }
 }

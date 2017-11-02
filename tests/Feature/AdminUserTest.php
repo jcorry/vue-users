@@ -11,40 +11,40 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AdminUserTest extends TestCase
 {
-    //use WithoutMiddleware;
     use DatabaseMigrations;
-    use DatabaseTransactions;
-
+    
     public function setUp()
     {
         parent::setUp();
+        $this->artisan('db:seed');
         $this->token = $this->getAuthToken();
-        \Log::debug($this->token);
     }
     
     protected function getAuthToken()
     {
-        $credentials = [
+        // Create the user
+        $user = User::create([
             'email' => 'newuser@gmail.com',
             'password' => 'password',
-        ];
-
-        $response = $this->json('POST', '/api/auth/register', $credentials);
-        $response
-            ->assertStatus(200);
+            'first_name' => 'New',
+            'last_name' => 'User',
+        ]);
 
         $user = \Sentinel::findByCredentials([
-            'login' => $credentials['email'],
+            'login' => $user->email,
         ]);
 
         // Activate the user
         $activation = \Activation::create($user);
+
+        // Give the user admin role
+        $adminRole = \Sentinel::findRoleBySlug('admin');
+
+        $adminRole->users()->attach($user);
         
         if (\Activation::complete($user, $activation->code)) {
-            $response = $this->json('POST', '/api/auth/login', $credentials);
-            return $response->json()['meta']['token'];
+            return \JWTAuth::fromUser($user);
         }
-        
         throw new \Exception('Could not authenticate user');
     } 
     
@@ -62,7 +62,7 @@ class AdminUserTest extends TestCase
             'last_name' => 'bar',
             'password' => 'xxxxx',
         ];
-        
+
         $response = $this->json('POST', '/api/users', $user, ['Authorization' => 'Bearer ' . $this->token]);
 
         $response->assertStatus(200)
@@ -99,6 +99,7 @@ class AdminUserTest extends TestCase
      */
     public function userListCanBeAccessed()
     {
+        // Create a user
         $user = User::create(
             [
                 'email' => 'foo@bar.com',
@@ -109,22 +110,12 @@ class AdminUserTest extends TestCase
             ]
         );
         
-        $response = $this->json('GET', '/api/users', ['Authorization' => 'Bearer ' . $this->token]);
+        // Request the user list
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token])->json('GET', '/api/users');
         
+        // Assert that the user list contains the created user's email address
         $response
             ->assertStatus(200)
-            ->assertJson(
-                [
-                    'data' => [
-                        [
-                            'id' => $user->id,
-                            'first_name' => $user->first_name,
-                            'last_name' => $user->last_name,
-                            'email' => $user->email,
-                            'phone' => $user->phone,
-                        ]
-                    ]
-                ]
-            );
+            ->assertSee($user->email);
     }
 }
