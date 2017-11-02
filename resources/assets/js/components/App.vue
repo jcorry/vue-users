@@ -136,8 +136,8 @@
     mounted: function() {
       // Router auth middleware
       this.$router.beforeEach((to, from, next) => {
-        if (to.matched.some(record => record.meta.requiresAuth)) {
-          if (!user.authenticated) {
+        if (to.meta.requiresAuth) {
+          if (!this.user.authenticated) {
             next({
               path: '/home',
               query: {

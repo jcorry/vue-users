@@ -7,11 +7,13 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AdminUserTest extends TestCase
 {
-    //use WithoutMiddleware;
+    use WithoutMiddleware;
     use DatabaseMigrations;
+    use DatabaseTransactions;
 
     public function setUp()
     {
@@ -63,11 +65,16 @@ class AdminUserTest extends TestCase
         $response = $this->json('POST', '/api/users', $user, ['Authorization' => 'Bearer ' . $this->token]);
 
         $response->assertStatus(200)
-            ->assertJsonFragment([
-                'email' => $user['email'],
-                'first_name' => $user['first_name'],
-                'last_name' => $user['last_name'],
-            ]);
+            ->assertJsonFragment(
+                [
+                    'email' => $user['email'],
+                    'first_name' => $user['first_name'],
+                    'last_name' => $user['last_name'],
+                ]
+            );
+
+        unset($user['password']);
+        
         $this->assertDatabaseHas('users', $user);
     }
 
@@ -91,20 +98,32 @@ class AdminUserTest extends TestCase
      */
     public function userListCanBeAccessed()
     {
+        $user = User::create(
+            [
+                'email' => 'foo@bar.com',
+                'first_name' => 'foo',
+                'last_name' => 'bar',
+                'password' => bcrypt('xxxxx'),
+                'phone' => '6785928804'
+            ]
+        );
+        
         $response = $this->json('GET', '/api/users', ['Authorization' => 'Bearer ' . $this->token]);
-
+        
         $response
             ->assertStatus(200)
-            ->assertJson([
-                'data' => [
-                    [
-                        'id' => $user->id,
-                        'first_name' => $user->first_name,
-                        'last_name' => $user->last_name,
-                        'email' => $user->email,
-                        'phone' => $user->phone,
+            ->assertJson(
+                [
+                    'data' => [
+                        [
+                            'id' => $user->id,
+                            'first_name' => $user->first_name,
+                            'last_name' => $user->last_name,
+                            'email' => $user->email,
+                            'phone' => $user->phone,
+                        ]
                     ]
                 ]
-            ]);
+            );
     }
 }
