@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class AdminUserTest extends TestCase
 {
-    use WithoutMiddleware;
+    //use WithoutMiddleware;
     use DatabaseMigrations;
     use DatabaseTransactions;
 
@@ -19,6 +19,7 @@ class AdminUserTest extends TestCase
     {
         parent::setUp();
         $this->token = $this->getAuthToken();
+        \Log::debug($this->token);
     }
     
     protected function getAuthToken()
