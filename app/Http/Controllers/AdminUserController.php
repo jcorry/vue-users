@@ -57,7 +57,8 @@ class AdminUserController extends BaseController
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        return response()->json($user);
     }
 
     /**

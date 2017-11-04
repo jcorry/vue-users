@@ -28,6 +28,7 @@ Route::group(
         Route::post('users', 'AdminUserController@create');
         Route::patch('users/{id}', 'AdminUserController@update');
         Route::get('users', 'AdminUserController@index');
+        Route::get('/users/{id}', 'AdminUserController@show');
         Route::delete('users/{id}', 'AdminUserController@destroy');
     }
 );
