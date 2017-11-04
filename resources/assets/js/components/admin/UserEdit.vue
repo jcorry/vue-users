@@ -18,6 +18,10 @@
       <label for="phone">Mobile Phone</label>
       <input name="phone" class="form-control" type="number" v-model="user.phone" placeholder="Mobile Phone..." />
     </div>
+    <div class="form-group">
+      <label for="dob">DOB</label>
+      <input name="dob" class="form-control" type="date" v-model="user.dob" placeholder="Date of birth..." />
+    </div>
     <div>
       <button class="btn btn-sm btn-default" v-on:click="saveUser()" type="button">Save</button>
     </div>

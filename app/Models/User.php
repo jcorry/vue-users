@@ -15,7 +15,7 @@ class User extends \Cartalyst\Sentinel\Users\EloquentUser
      * @var array
      */
     protected $fillable = [        
-        'first_name', 'last_name', 'email', 'phone', 'password',
+        'first_name', 'last_name', 'email', 'phone', 'password', 'dob',
     ];
 
     /**
