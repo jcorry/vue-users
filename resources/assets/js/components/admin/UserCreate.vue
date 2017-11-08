@@ -56,8 +56,8 @@ export default {
         response => {
 
         }
-      ).catch(response => {
-
+      ).catch(err => {
+        console.error(err)
       })
     }
   },
