@@ -44,9 +44,14 @@ export default {
       window.axios.post(uri, this.user.profile).then(
         response => {
             // Notify user
-            
+            this.$notify({
+              type: 'success',
+              title: "Success!",
+              text: `User ${this.user.profile.first_name} ${this.user.profile.last_name} created`,
+            })
             // Clear form
             this.user.profile = {};
+            this.$router.push({path: `/admin/users`})
         },
         response => {
 

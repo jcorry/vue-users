@@ -62,7 +62,11 @@ export default {
       let uri = this.$config.API_URL + `/users/${id}`;
       window.axios.patch(uri, this.user).then(
         response => {
-          console.log('user updated')
+          this.$notify({
+            type: "success",
+            title: "User Updated"
+          })
+          this.$router.push({path: `/admin/users`})
         },
         response => {
 
