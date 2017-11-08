@@ -12,16 +12,26 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class AdminUserTest extends TestCase
 {
     use DatabaseMigrations;
+
+    /**
+     * The JWT string that will be sent in Auhtorization headers to identify the user.
+     * 
+     * @var string $token
+     */
+    protected $token;
+
+    /**
+     * The user making authenticated requests.
+     * 
+     * @var \App\Models\User $user The user making requests.
+     */
+    protected $user;
     
     public function setUp()
     {
         parent::setUp();
         $this->artisan('db:seed');
-        $this->token = $this->getAuthToken();
-    }
-    
-    protected function getAuthToken()
-    {
+        
         // Create the user
         $user = User::create([
             'email' => 'newuser@gmail.com',
@@ -30,7 +40,7 @@ class AdminUserTest extends TestCase
             'last_name' => 'User',
         ]);
 
-        $user = \Sentinel::findByCredentials([
+        $this->user = \Sentinel::findByCredentials([
             'login' => $user->email,
         ]);
 
@@ -43,10 +53,11 @@ class AdminUserTest extends TestCase
         $adminRole->users()->attach($user);
         
         if (\Activation::complete($user, $activation->code)) {
-            return \JWTAuth::fromUser($user);
+            $this->token = \JWTAuth::fromUser($user);
+        } else {
+            throw new \Exception('Could not authenticate user');
         }
-        throw new \Exception('Could not authenticate user');
-    } 
+    }
     
     /**
      * Tests user creation endpoint
@@ -117,5 +128,57 @@ class AdminUserTest extends TestCase
         $response
             ->assertStatus(200)
             ->assertSee($user->email);
+    }
+
+    /**
+     * Tests the admin user update method.
+     * 
+     * @test
+     */
+    public function userCanBeUpdated()
+    {
+        // Create a user
+        $user = User::create(
+            [
+                'email' => 'foo@bar.com',
+                'first_name' => 'foo',
+                'last_name' => 'bar',
+                'password' => bcrypt('xxxxx'),
+                'phone' => '6785928804'
+            ]
+        );
+
+        // New values for user
+        $user->email = 'foo@baz.com';
+        $user->first_name = 'baz';
+
+        // Call update method
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token])->json('PATCH', '/api/users/' . $user->id, $user->toArray());
+
+        // Assert save/return was as expected
+        $response->assertStatus(200)
+            ->assertSee($user->email)
+            ->assertSee('"first_name":"baz"');
+                
+    }
+
+    /**
+     * @test
+     */
+    public function userUpdateDeniedToNonAuthedUser()
+    {
+        // Remove $this->user from admin role
+        $role = \Sentinel::findRoleBySlug('admin'); 
+        $role->users()->detach($this->user);
+
+        // Get a user to update.
+        $user = User::find(1);
+
+        // Call update method
+        $response = $this->withHeaders(['Authorization' => 'Bearer ' . $this->token])->json('PATCH', '/api/users/' . $user->id, $user->toArray());
+
+        // Assert that request authorization failed.
+        $response->assertStatus(401);
+
     }
 }

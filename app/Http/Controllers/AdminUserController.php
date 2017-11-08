@@ -57,7 +57,8 @@ class AdminUserController extends BaseController
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        return response()->json($user);
     }
 
     /**
@@ -80,8 +81,20 @@ class AdminUserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(\App\Http\Requests\UpdateUserRequest $request, $id)
     {
+        $user = User::find($id);
+        $user->fill($request->only([
+            'email',
+            'first_name',
+            'last_name',
+            'phone',
+            'dob',
+        ]));
+        $user->save();
+
+        return $user;
+        
     }
 
     /**

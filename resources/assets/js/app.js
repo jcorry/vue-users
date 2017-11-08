@@ -12,6 +12,7 @@ import Dashboard from './components/Dashboard.vue'
 import Admin from './components/admin/Admin.vue'
 import AdminUsers from './components/admin/UserList.vue'
 import AdminUserCreate from './components/admin/UserCreate.vue'
+import AdminUserEdit from './components/admin/UserEdit.vue'
 import Home from './components/Home.vue'
 import Router from 'vue-router'
 
@@ -63,6 +64,10 @@ const router = new Router({
         {
           path: 'users/create',
           component: AdminUserCreate
+        },
+        {
+          path: 'users/:id',
+          component: AdminUserEdit  
         }
       ]
     }

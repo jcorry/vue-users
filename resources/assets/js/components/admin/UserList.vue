@@ -5,11 +5,11 @@
       <tbody>
         <tr v-for="(user, index) in users" :key="user.id">
           <td>{{ user.id }}</td>
-          <td>{{ user.lastName }}</td>
-          <td>{{ user.firstName }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.first_name }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.phone}}</td>
-          <td>{{ user.soberDate}}</td>
+          <td>{{ user.dob}}</td>
           <td><button class="btn btn-sm btn-primary" v-on:click="editItem(user.id)">Edit</button> <button class="btn btn-sm btn-danger" v-on:click="deleteItem(user.id)">Delete</button></td>
         </tr>
       </tbody>
@@ -20,7 +20,7 @@
           <th>first name</th>
           <th>email</th>
           <th>phone</th>
-          <th>sobriety date</th>
+          <th>DOB</th>
           <th>&nbsp;</th>
         </tr>
       </thead>
@@ -31,7 +31,7 @@
           <th>first name</th>
           <th>email</th>
           <th>phone</th>
-          <th>sobriety date</th>
+          <th>DOB</th>
           <th>&nbsp;</th>
         </tr>
       </tfoot>
@@ -66,7 +66,10 @@ export default {
       })
     },
     editItem(id) {
-      console.log(`Editing user: ${id}`);
+      let user = this.users.find(user => {
+        return user.id == id
+      })
+      this.$router.push({path: `users/${id}`});
     },
     deleteItem(id)
     {

@@ -81,7 +81,6 @@
         error: false,
         user: {
           profile: {
-            first_name: "",
             email: ""
           },
           authenticated: false,
@@ -120,7 +119,9 @@
           response => {
             this.error = true
           }
-        )
+        ).catch(err => {
+          console.log(err)
+        })
       },
       logout() {
         localStorage.removeItem('id_token')
@@ -170,7 +171,6 @@
         response => {
           this.user.authenticated = false
           this.user.profile = {
-            first_name: null,
             email: null
           }
           this.$router.push({
@@ -180,7 +180,6 @@
       ).catch(err => {
           this.user.authenticated = false
           this.user.profile = {
-            first_name: null,
             email: null
           }
           this.$router.push({
