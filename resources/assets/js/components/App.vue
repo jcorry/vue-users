@@ -57,6 +57,7 @@
     <transition name="fade">
       <router-view></router-view>
     </transition>
+    <notifications position="bottom left"/>
   </div>
 </template>
 

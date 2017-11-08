@@ -4,34 +4,31 @@
     <table class="table is-striped">
       <tbody>
         <tr v-for="(user, index) in users" :key="user.id">
-          <td>{{ user.id }}</td>
-          <td>{{ user.last_name }}</td>
-          <td>{{ user.first_name }}</td>
+          <td class="hidden-xs">{{ user.last_name }}</td>
+          <td class="hidden-xs">{{ user.first_name }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.phone}}</td>
-          <td>{{ user.dob}}</td>
+          <td class="hidden-xs">{{ user.dob}}</td>
           <td><button class="btn btn-sm btn-primary" v-on:click="editItem(user.id)">Edit</button> <button class="btn btn-sm btn-danger" v-on:click="deleteItem(user.id)">Delete</button></td>
         </tr>
       </tbody>
       <thead>
         <tr>
-          <th>id</th>
-          <th>last name</th>
-          <th>first name</th>
+          <th class="hidden-xs">last name</th>
+          <th class="hidden-xs">first name</th>
           <th>email</th>
           <th>phone</th>
-          <th>DOB</th>
+          <th class="hidden-xs">DOB</th>
           <th>&nbsp;</th>
         </tr>
       </thead>
       <tfoot>
         <tr>
-          <th>id</th>
-          <th>last name</th>
-          <th>first name</th>
+          <th class="hidden-xs">last name</th>
+          <th class="hidden-xs">first name</th>
           <th>email</th>
           <th>phone</th>
-          <th>DOB</th>
+          <th class="hidden-xs">DOB</th>
           <th>&nbsp;</th>
         </tr>
       </tfoot>
@@ -69,14 +66,21 @@ export default {
       let user = this.users.find(user => {
         return user.id == id
       })
-      this.$router.push({path: `users/${id}`});
+      
+      this.$router.push({path: `/admin/users/${id}`});
     },
     deleteItem(id)
     {
-      console.log(`Deleting user: ${id}`);
       let uri = `${this.$config.API_URL}/users/${id}`
+      let index = this.users.findIndex(element => {
+        return element.id == id
+      })
       window.axios.delete(uri).then(response => {
-        this.items.splice(id, 1)
+        this.$notify({
+          type: 'success',
+          title: 'User Deleted'
+        })
+        this.users.splice(index, 1)
       })
     }
   }
