@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller as BaseController;
 use App\Models\User;
 
@@ -29,7 +30,9 @@ class AdminUserController extends BaseController
      */
     public function create(\App\Http\Requests\CreateUserRequest $request)
     {
-        
+        if (!$request->has('password')) {
+            $request->merge(['password' => Hash::make(str_random(12))]);
+        }
         
         $user = User::create($request->all());
 

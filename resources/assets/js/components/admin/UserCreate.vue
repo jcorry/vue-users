@@ -8,11 +8,11 @@
       </div>
       <div class="form-group">
         <label for="firstName">First Name</label>
-        <input type="text" name="firstName" v-model="user.profile.firstName" class="form-control" />
+        <input type="text" name="firstName" v-model="user.profile.first_name" class="form-control" />
       </div>
       <div class="form-group">
         <label for="lastName">Last Name</label>
-        <input type="text" name="lastName"  v-model="user.profile.lastName" class="form-control" />
+        <input type="text" name="lastName"  v-model="user.profile.last_name" class="form-control" />
       </div>
       <div class="form-group">
         <label for="phone">Mobile Phone</label>
@@ -20,7 +20,7 @@
       </div>
       <div class="form-group">
         <label for="birthDate">Birth Date</label>
-        <input type="date" name="birthDate" v-model="user.profile.birthDate" class="form-control" />
+        <input type="date" name="birthDate" v-model="user.profile.dob" class="form-control" />
       </div>
       <button class="btn btn-default" type="submit">Create</button>
     </form>  
@@ -40,6 +40,25 @@ export default {
     createUser: function(event) {
       event.preventDefault()
       console.log(this.user.profile)
+      let uri = this.$config.API_URL + `/users`;
+      window.axios.post(uri, this.user.profile).then(
+        response => {
+            // Notify user
+            this.$notify({
+              type: 'success',
+              title: "Success!",
+              text: `User ${this.user.profile.first_name} ${this.user.profile.last_name} created`,
+            })
+            // Clear form
+            this.user.profile = {};
+            this.$router.push({path: `/admin/users`})
+        },
+        response => {
+
+        }
+      ).catch(err => {
+        console.error(err)
+      })
     }
   },
   mounted: function() {
