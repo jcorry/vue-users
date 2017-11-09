@@ -112,6 +112,7 @@ class AdminUserTest extends TestCase
                         ->json('DELETE', '/api/users/' . $user->id);
 
         $response->assertStatus(204);
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
     }
 
     /**
