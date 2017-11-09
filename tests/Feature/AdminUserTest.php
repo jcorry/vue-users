@@ -98,8 +98,20 @@ class AdminUserTest extends TestCase
      */
     public function userCanBeDeleted()
     {
-        $response = $this->get('/');
-        $response->assertStatus(200);
+        // Create the user in the DB
+        $user = User::create([
+            'email' => 'test@demo.com',
+            'password' => bcrypt('xxxxx'),
+            'first_name' => 'Test',
+            'last_name' => 'Demo',
+            'dob' => '1981-04-01',
+        ]);
+        
+        $response = $this
+                        ->withHeaders(['Authorization' => 'Bearer ' . $this->token])
+                        ->json('DELETE', '/api/users/' . $user->id);
+
+        $response->assertStatus(204);
     }
 
     /**
