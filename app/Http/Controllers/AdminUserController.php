@@ -107,11 +107,11 @@ class AdminUserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(\App\Http\Requests\DeleteUserRequest $request, $id)
     {
         // Delete the User, activations, role_user records
         $user = \Sentinel::findById($id);
 
-        return response()->json($user->delete());
+        return response()->json($user->delete(), 204);
     }
 }
