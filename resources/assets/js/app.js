@@ -15,6 +15,7 @@ import AdminUserCreate from './components/admin/UserCreate.vue'
 import AdminUserEdit from './components/admin/UserEdit.vue'
 import Home from './components/Home.vue'
 import Router from 'vue-router'
+import Notifications from 'vue-notification'
 
 const vueConfig = require('vue-config')
 
@@ -29,6 +30,9 @@ const configs = {
 
 Vue.use(vueConfig, configs)
 Vue.use(Router)
+
+// Notifications
+Vue.use(Notifications)
 
 const router = new Router({
   routes: [
