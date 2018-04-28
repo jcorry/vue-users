@@ -20,7 +20,7 @@ class AdminUserController extends BaseController
      */
     public function index()
     {
-        return User::paginate();
+        return User::with('roles')->paginate();
     }
 
     /**
@@ -60,7 +60,7 @@ class AdminUserController extends BaseController
      */
     public function show($id)
     {
-        $user = User::find($id);
+        $user = User::with('roles')->find($id);
         return response()->json($user);
     }
 
